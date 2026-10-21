@@ -51,7 +51,6 @@ Go to **Repository Settings -> Secrets and variables -> Actions** and add these 
 | `DOCKERHUB_USERNAME` | Docker Hub username |
 | `DOCKERHUB_TOKEN` | Docker Hub access token, not password |
 | `SSH_PRIVATE_KEY` | Complete contents of `~/.ssh/ci_cd_deploy` |
-| `SSH_KNOWN_HOSTS` | Verified host key, generated below |
 
 Add these **variables**:
 
@@ -60,14 +59,7 @@ Add these **variables**:
 | `SERVER_IP` | Ubuntu server public IP address or DNS name |
 | `SSH_USER` | `deploy` |
 
-On your secure computer, generate the host-key entry and verify the fingerprint against your cloud/server console. Put the complete `ssh-keyscan` output in `SSH_KNOWN_HOSTS`.
-
-```bash
-ssh-keyscan -H YOUR_SERVER_IP
-ssh-keygen -lf <(ssh-keyscan YOUR_SERVER_IP 2>/dev/null)
-```
-
-Host-key validation remains enabled; the workflow does not disable SSH security checks.
+The workflow creates its `known_hosts` file at deployment time with `ssh-keyscan -H "$SERVER_IP"`. This is simpler for a training environment, but it does not independently verify the host key against a cloud-console fingerprint. For production, prefer a verified `SSH_KNOWN_HOSTS` secret.
 
 ## 4. Deployment
 
