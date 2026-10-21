@@ -48,7 +48,7 @@ Go to **Repository Settings -> Secrets and variables -> Actions** and add these 
 
 | Secret | Value |
 | --- | --- |
-| `DOCKERHUB_USERNAME` | Docker Hub username |
+| `DOCKER_USERNAME` | Docker Hub username |
 | `DOCKERHUB_TOKEN` | Docker Hub access token, not password |
 | `SSH_PRIVATE_KEY` | Complete contents of `~/.ssh/ci_cd_deploy` |
 
