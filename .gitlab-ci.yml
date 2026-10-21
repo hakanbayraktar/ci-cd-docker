@@ -48,4 +48,4 @@ deploy-to-ubuntu:
          docker logout && \
          (docker rm -f cicd-pipeline-container || true) && \
          docker run -d --restart unless-stopped --name cicd-pipeline-container \
-           -p 8080:8080 $IMAGE_NAME:$CI_COMMIT_SHA"
+           -p 19003:8080 $IMAGE_NAME:$CI_COMMIT_SHA"

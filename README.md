@@ -50,4 +50,7 @@ GitLab projesinde **Settings → CI/CD → Variables** bölümüne aynı değerl
 - GitHub: `main` dalına push yapılınca CI test/build/push işlemini, ardından CD Ubuntu dağıtımını yapar.
 - GitLab: `main` dalına push yapılınca `.gitlab-ci.yml` aynı sırayı uygular.
 
-Her dağıtım commit SHA etiketi kullanır; sunucuda eski `cicd-pipeline-container` kaldırılır ve yeni imaj `8080` portunda başlatılır. Kontrol: `http://SUNUCU_IP:8080/`.
+Her dağıtım commit SHA etiketi kullanır ve sunucuda eski `cicd-pipeline-container` kaldırılır.
+
+- GitHub Actions dağıtımı: `http://SUNUCU_IP:8080/`
+- GitLab CI/CD dağıtımı: `http://SUNUCU_IP:19003/` (container içindeki uygulama portu yine `8080`dir)
