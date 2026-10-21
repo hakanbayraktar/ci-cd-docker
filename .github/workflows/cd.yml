@@ -26,11 +26,15 @@ jobs:
       env:
         SERVER_IP: ${{ vars.SERVER_IP }}
         SSH_USER: ${{ vars.SSH_USER }}
-        IMAGE: ${{ secrets.DOCKER_USERNAME }}/cicd-pipeline
+        IMAGE: ${{ secrets.DOCKER_USERNAME }}/devops-app
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
         IMAGE_TAG: ${{ github.event.workflow_run.head_sha }}
       run: |
-        ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes "$SSH_USER@$SERVER_IP" \
-          "docker pull $IMAGE:$IMAGE_TAG && \
+        printf '%s' "$DOCKERHUB_TOKEN" | ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes "$SSH_USER@$SERVER_IP" \
+          "docker login --username '$DOCKER_USERNAME' --password-stdin && \
+           docker pull $IMAGE:$IMAGE_TAG && \
+           docker logout && \
            (docker rm -f cicd-pipeline-container || true) && \
            docker run -d --restart unless-stopped --name cicd-pipeline-container \
              -p 8080:8080 $IMAGE:$IMAGE_TAG"

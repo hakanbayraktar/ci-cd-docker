@@ -63,6 +63,6 @@ The workflow creates its `known_hosts` file at deployment time with `ssh-keyscan
 
 ## 4. Deployment
 
-Push to `main`. A successful CI pipeline pushes both a SHA-tagged image and `latest`; CD uses the SHA-tagged image and starts `cicd-pipeline-container` with `--restart unless-stopped` on port 8080.
+Push to `main`. A successful CI pipeline pushes both a SHA-tagged image and `latest` to Docker Hub repository `devops-app`. CD logs in to Docker Hub with the configured token to pull the private SHA-tagged image, then starts `cicd-pipeline-container` with `--restart unless-stopped` on port 8080.
 
 Open `http://YOUR_SERVER_IP:8080/` to verify the service.

@@ -29,5 +29,5 @@ jobs:
         context: .
         push: true
         tags: |
-          ${{ secrets.DOCKER_USERNAME }}/cicd-pipeline:${{ github.sha }}
-          ${{ secrets.DOCKER_USERNAME }}/cicd-pipeline:latest
+          ${{ secrets.DOCKER_USERNAME }}/devops-app:${{ github.sha }}
+          ${{ secrets.DOCKER_USERNAME }}/devops-app:latest
