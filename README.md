@@ -41,14 +41,26 @@ Repository **Settings → Secrets and variables → Actions** bölümüne ekleyi
 | Variable | `SERVER_IP` | Ubuntu public IP/DNS |
 | Variable | `SSH_USER` | `deploy` |
 
+Manuel çalıştırma için **Actions → CI → Run workflow** yolunu açın, `main` dalını seçip **Run workflow** düğmesine basın. CI tamamlanınca **CD - Deploy to Ubuntu** otomatik başlar. GitHub-hosted `ubuntu-latest` runner kullanılır; ayrıca runner kurulumu gerekmez.
+
 ### GitLab CI/CD
 
-GitLab projesinde **Settings → CI/CD → Variables** bölümüne aynı değerleri ekleyin: `DOCKER_USERNAME`, `DOCKERHUB_TOKEN`, `SSH_PRIVATE_KEY`, `SERVER_IP`, `SSH_USER`. `SSH_PRIVATE_KEY` değişkenini **File** türünde ekleyin; diğer hassas değerleri **Masked** yapın.
+GitLab projesinde **Settings → CI/CD → Variables → Add variable** bölümüne aşağıdaki değerleri ekleyin:
+
+| Ad | Değer türü | Not |
+| --- | --- | --- |
+| `DOCKER_USERNAME` | Variable | Docker Hub kullanıcı adı |
+| `DOCKERHUB_TOKEN` | Variable, Masked | Docker Hub access token |
+| `SSH_PRIVATE_KEY` | File | `ci_cd_deploy` private key içeriği; son satır boşluk/yeni satırla bitmeli |
+| `SERVER_IP` | Variable | Ubuntu public IP/DNS |
+| `SSH_USER` | Variable | `deploy` |
+
+Manuel çalıştırma için **Build → Pipelines → New pipeline** yolundan `main` dalını seçip **Run pipeline** düğmesine basın. GitLab shared runner kullanılır; ayrıca runner kurulumu gerekmez.
 
 ## 4. Dağıtım
 
-- GitHub: `main` dalına push yapılınca CI test/build/push işlemini, ardından CD Ubuntu dağıtımını yapar.
-- GitLab: `main` dalına push yapılınca `.gitlab-ci.yml` aynı sırayı uygular.
+- GitHub: `main` dalına push yapılınca veya yukarıdaki manuel başlatma ile CI test/build/push işlemini, ardından CD Ubuntu dağıtımını yapar.
+- GitLab: `main` dalına push yapılınca veya **New pipeline** ile `.gitlab-ci.yml` aynı sırayı uygular.
 
 Her dağıtım commit SHA etiketi kullanır ve sunucuda eski `cicd-pipeline-container` kaldırılır.
 
