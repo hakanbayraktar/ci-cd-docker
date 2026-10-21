@@ -1,21 +1,35 @@
-name: CD Pipeline
+name: CD - Deploy to Ubuntu
 
 on:
   workflow_run:
-    workflows: ["CI Pipeline"]
+    workflows: ["CI"]
     types:
       - completed
 
 jobs:
-
-  build:
-
-    runs-on: self-hosted
-
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    environment: production
     steps:
-    - name: Pull Docker image
-      run: docker pull hbayraktar/cicd-pipeline:latest
-    - name: Delete Old docker container
-      run:  docker rm -f cicd-pipeline-container || true
-    - name: Run Docker Container
-      run: docker run -d -p 8080:8080 --name cicd-pipeline-container hbayraktar/cicd-pipeline
+    - name: Configure SSH
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+      run: |
+        install -m 700 -d ~/.ssh
+        printf '%s' "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+        chmod 600 ~/.ssh/id_ed25519
+        printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+    - name: Pull and run the immutable image on Ubuntu
+      env:
+        SERVER_IP: ${{ vars.SERVER_IP }}
+        SSH_USER: ${{ vars.SSH_USER }}
+        IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/cicd-pipeline
+        IMAGE_TAG: ${{ github.event.workflow_run.head_sha }}
+      run: |
+        ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes "$SSH_USER@$SERVER_IP" \
+          "docker pull $IMAGE:$IMAGE_TAG && \
+           (docker rm -f cicd-pipeline-container || true) && \
+           docker run -d --restart unless-stopped --name cicd-pipeline-container \
+             -p 8080:8080 $IMAGE:$IMAGE_TAG"
