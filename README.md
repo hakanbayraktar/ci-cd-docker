@@ -65,4 +65,4 @@ Manuel çalıştırma için **Build → Pipelines → New pipeline** yolundan `m
 Her dağıtım commit SHA etiketi kullanır ve sunucuda eski `cicd-pipeline-container` kaldırılır.
 
 - GitHub Actions dağıtımı: `http://SUNUCU_IP:8080/`
-- GitLab CI/CD dağıtımı: `http://SUNUCU_IP:19003/` (container içindeki uygulama portu yine `8080`dir)
+- GitLab CI/CD dağıtımı: `http://SUNUCU_IP:19000/` (container içindeki uygulama portu yine `8080`dir)
