@@ -13,7 +13,7 @@ sudo apt update && sudo apt install -y docker.io
 sudo systemctl enable --now docker
 ```
 
-Güvenlik grubu/firewall üzerinde uygulama için TCP `8080`, SSH için TCP `22` açık olmalıdır.
+Güvenlik grubu/firewall üzerinde GitHub Actions dağıtımı için TCP `8080`, GitLab CI/CD dağıtımı için TCP `19003`, SSH için TCP `22` açık olmalıdır.
 
 ## 2. SSH anahtarını oluştur ve yükle
 
@@ -65,4 +65,4 @@ Manuel çalıştırma için **Build → Pipelines → New pipeline** yolundan `m
 Her dağıtım commit SHA etiketi kullanır ve sunucuda eski `cicd-pipeline-container` kaldırılır.
 
 - GitHub Actions dağıtımı: `http://SUNUCU_IP:8080/`
-- GitLab CI/CD dağıtımı: `http://SUNUCU_IP:19000/` (container içindeki uygulama portu yine `8080`dir)
+- GitLab CI/CD dağıtımı: `http://SUNUCU_IP:19003/` (container içindeki uygulama portu yine `8080`dir)
