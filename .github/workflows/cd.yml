@@ -26,7 +26,7 @@ jobs:
       env:
         SERVER_IP: ${{ vars.SERVER_IP }}
         SSH_USER: ${{ vars.SSH_USER }}
-        IMAGE: ${{ secrets.DOCKER_USERNAME }}/devops-app
+        IMAGE: ${{ secrets.DOCKER_USERNAME }}/devops-app-private
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
         IMAGE_TAG: ${{ github.event.workflow_run.head_sha }}
