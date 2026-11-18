@@ -11,7 +11,7 @@ flowchart LR
     C -- "başarılı bitince" --> D["CD<br/>SSH (student)"]
     D --> S["Ubuntu sunucu"]
     S -- "docker pull" --> H
-    S --> K["cicd-pipeline-container<br/>19002 → 8080"]
+    S --> K["cicd-pipeline-container<br/>19000 → 8080"]
 ```
 
 ## 0. Projeyi kendi hesabınıza alın
@@ -34,13 +34,15 @@ Aşağıdaki komutları sunucuda `student` kullanıcısıyla çalıştırın. Do
 docker ps
 ```
 
-Uygulama host'un `19002` portunu kullanır. Port boş olmalıdır; çıktıda container görünmemelidir:
+Uygulama host'un `19000` portunu kullanır. Portu kullanan bir container olup olmadığına bakın:
 
 ```bash
-docker ps --filter publish=19002
+docker ps --filter publish=19000
 ```
 
-`k8s-labs` Kind cluster'ı da `19002` portunu tutar. Çıktıda `k8s-labs-control-plane` görünüyorsa bu lab sırasında cluster çalışmamalıdır.
+Çıktıda yalnızca `cicd-pipeline-container` görünüyorsa sorun yok; deploy onu yenisiyle değiştirir. SonarQube da `19000` portunu kullanır; çıktıda `sonarqube` görünüyorsa bu lab sırasında SonarQube çalışmamalıdır.
+
+Uygulamaya DNS kaydı olmadan sunucunun IP adresiyle erişilir. Sunucunun firewall'unda TCP `19000` (uygulama) ve TCP `22` (SSH) açık olmalıdır.
 
 <details>
 <summary><strong>Docker kurulu olmayan boş bir Ubuntu sunucu</strong></summary>
@@ -115,24 +117,20 @@ CI başarıyla bitince **CD - Deploy to Ubuntu** otomatik başlar. CI başarıs�
 
 Her dağıtım commit SHA etiketi kullanır ve sunucuda eski `cicd-pipeline-container` kaldırılır.
 
-CD bitince sunucuda container'ı görün. `PORTS` sütununda `0.0.0.0:19002->8080/tcp` yazar:
+CD bitince sunucuda container'ı görün. `PORTS` sütununda `0.0.0.0:19000->8080/tcp` yazar:
 
 ```bash
 docker ps --filter name=cicd-pipeline-container
 ```
 
 ```bash
-curl -s http://localhost:19002/; echo
+curl -s http://localhost:19000/; echo
 ```
 
-Sunucuda port `19002`, container içinde ise uygulama portu `8080` kullanılır. Tarayıcıdan açılacak adresler:
+Sunucuda port `19000`, container içinde ise uygulama portu `8080` kullanılır. Tarayıcıdan açılacak adres:
 
 ```bash
-echo "https://$(hostname)-app2.devopsatolyesi.com"
-```
-
-```bash
-echo "http://$(curl -s ifconfig.me):19002"
+echo "http://$(curl -s ifconfig.me):19000"
 ```
 
 ## Temizlik
