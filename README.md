@@ -11,27 +11,20 @@ flowchart LR
     C -- "başarılı bitince" --> D["CD<br/>SSH (student)"]
     D --> S["Ubuntu sunucu"]
     S -- "docker pull" --> H
-    S --> K["cicd-pipeline-container<br/>19001 → 8080"]
+    S --> K["cicd-pipeline-container<br/>19002 → 8080"]
 ```
 
 ## 0. Projeyi kendi hesabınıza alın
 
-Workflow'ları kendi GitHub hesabınızda çalıştırmak için projeyi fork veya import ile kendi hesabınıza alın.
-
-**Fork:**
-
-1. `https://github.com/hakanbayraktar/ci-cd-docker` adresini açın.
-2. Sağ üstteki **Fork** düğmesine basın.
-3. **Owner** olarak kendi hesabınızı seçip **Create fork** düğmesine basın.
-4. Kendi fork'unuzda **Actions** sekmesini açın ve **I understand my workflows, go ahead and enable them** düğmesine basın. GitHub fork'larda workflow'ları kapalı getirir; bu düğmeye basılmazsa CI ve CD hiç çalışmaz.
-
-**Import:**
+Workflow'ları kendi GitHub hesabınızda çalıştırmak için projeyi **import** ile kendi hesabınıza alın. Fork kullanmayın: GitHub fork'larda workflow'ları kapalı getirir ve fork her zaman ana projeye bağlı kalır.
 
 1. GitHub'da sağ üstteki **+** menüsünden **Import repository** seçin.
 2. **The URL for your source repository** alanına `https://github.com/hakanbayraktar/ci-cd-docker.git` yazın.
-3. **Owner** ve **Repository name** seçip **Begin import** düğmesine basın. Import edilen repoda workflow'lar açık gelir.
+3. **Owner** olarak kendi hesabınızı seçin, **Repository name** alanına `ci-cd-docker` yazın.
+4. **Private** veya **Public** seçip **Begin import** düğmesine basın.
+5. Import bitince açılan bağlantıyla kendi reponuza geçin.
 
-Bundan sonraki bütün adımlar kendi reponuzda yapılır. Secret ve variable'lar fork veya import ile gelmez; 3. adımda kendi değerlerinizle eklersiniz.
+Bundan sonraki bütün adımlar kendi reponuzda yapılır. Secret ve variable'lar import ile gelmez; 3. adımda kendi değerlerinizle eklersiniz.
 
 ## 1. Sunucuyu kontrol et
 
@@ -41,13 +34,13 @@ Aşağıdaki komutları sunucuda `student` kullanıcısıyla çalıştırın. Do
 docker ps
 ```
 
-Uygulama host'un `19001` portunu kullanır. Port boş olmalıdır; çıktıda container görünmemelidir:
+Uygulama host'un `19002` portunu kullanır. Port boş olmalıdır; çıktıda container görünmemelidir:
 
 ```bash
-docker ps --filter publish=19001
+docker ps --filter publish=19002
 ```
 
-`k8s-labs` Kind cluster'ı da `19001` portunu tutar. Çıktıda `k8s-labs-control-plane` görünüyorsa bu lab sırasında cluster çalışmamalıdır.
+`k8s-labs` Kind cluster'ı da `19002` portunu tutar. Çıktıda `k8s-labs-control-plane` görünüyorsa bu lab sırasında cluster çalışmamalıdır.
 
 <details>
 <summary><strong>Docker kurulu olmayan boş bir Ubuntu sunucu</strong></summary>
@@ -122,24 +115,24 @@ CI başarıyla bitince **CD - Deploy to Ubuntu** otomatik başlar. CI başarıs�
 
 Her dağıtım commit SHA etiketi kullanır ve sunucuda eski `cicd-pipeline-container` kaldırılır.
 
-CD bitince sunucuda container'ı görün. `PORTS` sütununda `0.0.0.0:19001->8080/tcp` yazar:
+CD bitince sunucuda container'ı görün. `PORTS` sütununda `0.0.0.0:19002->8080/tcp` yazar:
 
 ```bash
 docker ps --filter name=cicd-pipeline-container
 ```
 
 ```bash
-curl -s http://localhost:19001/; echo
+curl -s http://localhost:19002/; echo
 ```
 
-Sunucuda port `19001`, container içinde ise uygulama portu `8080` kullanılır. Tarayıcıdan açılacak adresler:
+Sunucuda port `19002`, container içinde ise uygulama portu `8080` kullanılır. Tarayıcıdan açılacak adresler:
 
 ```bash
-echo "https://$(hostname)-app1.devopsatolyesi.com"
+echo "https://$(hostname)-app2.devopsatolyesi.com"
 ```
 
 ```bash
-echo "http://$(curl -s ifconfig.me):19001"
+echo "http://$(curl -s ifconfig.me):19002"
 ```
 
 ## Temizlik
