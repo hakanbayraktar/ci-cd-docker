@@ -1,4 +1,4 @@
-# GitHub Actions ile Ubuntu'ya Docker dağıtımı
+# GitHub Actions ile Ubuntu'ya Docker dağıtımı--------
 
 **CI** workflow'u kodu test eder ve imajı Docker Hub'daki private `devops-app-private` reposuna yollar. CI başarılı bitince **CD - Deploy to Ubuntu** SSH ile sunucuda container'ı günceller.
 
